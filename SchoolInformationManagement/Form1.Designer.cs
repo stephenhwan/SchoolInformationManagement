@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 
 namespace SchoolInformationManagement
 {
@@ -41,12 +41,13 @@ namespace SchoolInformationManagement
 			btnModify = new Button();
 			btnSubject = new Button();
 			lbSelectedID = new Label();
-			this.tbName = new TextBox();
-			this.tbPhone = new TextBox();
+			tbName = new TextBox();
+			tbPhone = new TextBox();
 			tbEmail = new TextBox();
 			label2 = new Label();
 			label3 = new Label();
 			label4 = new Label();
+			label5 = new Label();
 			((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
 			SuspendLayout();
 			// 
@@ -163,17 +164,17 @@ namespace SchoolInformationManagement
 			// 
 			// tbName
 			// 
-			this.tbName.Location = new Point(899, 180);
-			this.tbName.Name = "tbName";
-			this.tbName.Size = new Size(180, 27);
-			this.tbName.TabIndex = 11;
+			tbName.Location = new Point(899, 180);
+			tbName.Name = "tbName";
+			tbName.Size = new Size(180, 27);
+			tbName.TabIndex = 11;
 			// 
 			// tbPhone
 			// 
-			this.tbPhone.Location = new Point(899, 245);
-			this.tbPhone.Name = "tbPhone";
-			this.tbPhone.Size = new Size(180, 27);
-			this.tbPhone.TabIndex = 12;
+			tbPhone.Location = new Point(899, 245);
+			tbPhone.Name = "tbPhone";
+			tbPhone.Size = new Size(180, 27);
+			tbPhone.TabIndex = 12;
 			// 
 			// tbEmail
 			// 
@@ -209,17 +210,28 @@ namespace SchoolInformationManagement
 			label4.TabIndex = 17;
 			label4.Text = "Email";
 			// 
+			// label5
+			// 
+			label5.AutoSize = true;
+			label5.Location = new Point(899, 147);
+			label5.Name = "label5";
+			label5.Size = new Size(156, 20);
+			label5.TabIndex = 18;
+			label5.Text = "Form register Student ";
+			label5.Click += label5_Click;
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
 			AutoScaleMode = AutoScaleMode.Font;
 			ClientSize = new Size(1209, 545);
+			Controls.Add(label5);
 			Controls.Add(label4);
 			Controls.Add(label3);
 			Controls.Add(label2);
 			Controls.Add(tbEmail);
-			Controls.Add(this.tbPhone);
-			Controls.Add(this.tbName);
+			Controls.Add(tbPhone);
+			Controls.Add(tbName);
 			Controls.Add(lbSelectedID);
 			Controls.Add(btnSubject);
 			Controls.Add(btnModify);
@@ -258,5 +270,6 @@ namespace SchoolInformationManagement
 		private Label label2;
 		private Label label3;
 		private Label label4;
+		private Label label5;
 	}
 }
