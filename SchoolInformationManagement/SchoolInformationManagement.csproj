@@ -3,8 +3,13 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
+<<<<<<< HEAD
 	<Nullable>disable</Nullable>
 	<UseWindowsForms>true</UseWindowsForms>
+=======
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+>>>>>>> 3727140574dc122eca3ab557e56b46e1fe555dcd
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -12,6 +17,7 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
   </ItemGroup>
 
+<<<<<<< HEAD
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -28,3 +34,6 @@
   </ItemGroup>
 
 </Project>
+=======
+</Project>
+>>>>>>> 3727140574dc122eca3ab557e56b46e1fe555dcd
