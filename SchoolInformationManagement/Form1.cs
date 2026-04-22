@@ -9,9 +9,6 @@ namespace SchoolInformationManagement
 	// and displaying data. It should not contain complex business logic or database queries.
 	// =========================================================================================
 
-	/// <summary>
-	/// The main form of the application containing the DataGridView and input controls.
-	/// </summary>
 	public partial class Form1 : Form
 	{
 		// Dependency Injection: The UI layer depends on the Interface, not the concrete class.
@@ -44,9 +41,6 @@ namespace SchoolInformationManagement
 			CRUDService = new UserService(repository);
 		}
 
-		/// <summary>
-		/// Triggered when the form is initially loaded into memory.
-		/// </summary>
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			// Load the default view (Students) when the application starts
@@ -70,9 +64,6 @@ namespace SchoolInformationManagement
 		// CONTROLLER LOGIC: Intermediate methods handling UI state and calling the Service Layer
 		// =========================================================================================
 
-		/// <summary>
-		/// Gathers input from textboxes and requests the Service layer to create a new student.
-		/// </summary>
 		private void AddStudent()
 		{
 			try
@@ -100,9 +91,6 @@ namespace SchoolInformationManagement
 			}
 		}
 
-		/// <summary>
-		/// Handles the deletion of a selected user after asking for confirmation.
-		/// </summary>
 		private void RemoveUser()
 		{
 			// Guard clause: Ensure a user is actually selected before proceeding
@@ -142,10 +130,6 @@ namespace SchoolInformationManagement
 				}
 			}
 		}
-
-		/// <summary>
-		/// Updates an existing student's information based on textbox inputs.
-		/// </summary>
 		private void UpdateUser()
 		{
 			// Guard clause: Check if a user is selected AND if the user is a Student
@@ -182,9 +166,6 @@ namespace SchoolInformationManagement
 			}
 		}
 
-		/// <summary>
-		/// Fetches the list of subjects and binds them to the DataGridView.
-		/// </summary>
 		private void LoadSubjects()
 		{
 			try
@@ -200,11 +181,6 @@ namespace SchoolInformationManagement
 				MessageBox.Show("Error: " + ex.Message);
 			}
 		}
-
-		/// <summary>
-		/// Fetches users based on their role and dynamically binds them to the grid.
-		/// </summary>
-		/// <param name="filterRole">The role string used to filter the database fetch.</param>
 		private void LoadData(string filterRole)
 		{
 			try
@@ -232,9 +208,6 @@ namespace SchoolInformationManagement
 			}
 		}
 
-		/// <summary>
-		/// Captures the row clicked by the user to populate the textboxes and tracking variables.
-		/// </summary>
 		private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
 		{
 			// Ignore clicks on table headers
@@ -265,13 +238,7 @@ namespace SchoolInformationManagement
 				lbSelectedID.Text = $"Selected Subject: {selectedSubject.SubjectId} - {selectedSubject.SubjectName}";
 			}
 		}
-
-		private void label5_Click(object sender, EventArgs e)
-		{
-			// Unused event handler
-		}
 	}
-
 
 	// =========================================================================================
 	// BUSINESS LOGIC LAYER (BLL)
@@ -279,9 +246,6 @@ namespace SchoolInformationManagement
 	// validations, and determines how data is processed before it reaches the database.
 	// =========================================================================================
 
-	/// <summary>
-	/// Contract defining the operations available for User management.
-	/// </summary>
 	public interface IUserService
 	{
 		void ModifyStudent(int id, string name, string phone, string email);
@@ -291,25 +255,18 @@ namespace SchoolInformationManagement
 		List<User> GetUsers(string filterRole);
 	}
 
-	/// <summary>
-	/// Concrete implementation of the User Service business logic.
-	/// </summary>
+
 	public class UserService : IUserService
 	{
 		// Reference to the Data Access Layer
 		private readonly IUserRepository _repository;
 
-		/// <summary>
-		/// Constructor requiring an IUserRepository to function (Dependency Injection).
-		/// </summary>
+
 		public UserService(IUserRepository repository)
 		{
 			_repository = repository;
 		}
 
-		/// <summary>
-		/// Validates input and creates a new Student object before passing it to the repository.
-		/// </summary>
 		public void CreateStudent(string name, string phone, string email)
 		{
 			// Business Validation: Ensure the required fields are not empty before proceeding to the database
@@ -328,9 +285,7 @@ namespace SchoolInformationManagement
 			_repository.AddStudent(newStudent);
 		}
 
-		/// <summary>
-		/// Validates deletion requests before passing them to the repository.
-		/// </summary>
+
 		public void RemoveUser(int id, string role)
 		{
 			// Business Validation: Validate ID. 
@@ -342,9 +297,6 @@ namespace SchoolInformationManagement
 			_repository.DeleteUser(id, role);
 		}
 
-		/// <summary>
-		/// Validates and constructs an updated Student object.
-		/// </summary>
 		public void ModifyStudent(int id, string name, string phone, string email)
 		{
 			// Business Validation: Prevent processing of invalid IDs or empty names
@@ -397,9 +349,6 @@ namespace SchoolInformationManagement
 	// It executes queries, handles transactions, and maps SQL result sets to C# Objects.
 	// =========================================================================================
 
-	/// <summary>
-	/// Contract defining the raw database operations required by the application.
-	/// </summary>
 	public interface IUserRepository
 	{
 		void UpdateStudent(Student student);
@@ -412,21 +361,10 @@ namespace SchoolInformationManagement
 		List<User> GetAllUsers();
 	}
 
-	/// <summary>
-	/// Concrete implementation of the Data Access Layer using ADO.NET and raw SQL queries.
-	/// </summary>
 	public class UserRepository : IUserRepository
 	{
 		// Connection string defining Server, DB name, and Authentication method
 		private readonly string _connectionString;
-
-		// -------------------------------------------------------------------------
-		// SQL QUERY DEFINITIONS
-		// We use LEFT JOINs here to fetch users even if they have no subjects assigned.
-		// We also use CAST(NULL AS TYPE) to ensure all queries have identical column 
-		// signatures so they can be merged together using UNION ALL if needed.
-		// -------------------------------------------------------------------------
-
 		private readonly string _queryStudent = @"
         SELECT st.StudentId AS Id, st.Name, st.Phone, st.Email, CAST(NULL AS DECIMAL(18,2)) AS Salary, CAST(NULL AS BIT) AS IsFullTime, 'Student' AS UserRole,
                su.SubjectId, su.SubjectName
@@ -445,18 +383,11 @@ namespace SchoolInformationManagement
         SELECT ad.AdminId AS Id, ad.Name, ad.Phone, ad.Email, ad.Salary, ad.IsFullTime, 'Administrator' AS UserRole,
                CAST(NULL AS INT) AS SubjectId, CAST(NULL AS NVARCHAR(MAX)) AS SubjectName
         FROM Administrators ad";
-
-		/// <summary>
-		/// Constructor requiring a SQL connection string.
-		/// </summary>
 		public UserRepository(string connectionString)
 		{
 			_connectionString = connectionString;
 		}
 
-		/// <summary>
-		/// Executes a simple SELECT query to fetch all subjects.
-		/// </summary>
 		public List<Subject> GetSubjects()
 		{
 			var subjects = new List<Subject>();
@@ -484,9 +415,6 @@ namespace SchoolInformationManagement
 			return subjects;
 		}
 
-		/// <summary>
-		/// Executes an INSERT statement to create a new record in the Students table.
-		/// </summary>
 		public void AddStudent(Student student)
 		{
 			// Using parameterized queries (@Name, @Phone) instead of string concatenation 
@@ -508,10 +436,6 @@ namespace SchoolInformationManagement
 				}
 			}
 		}
-
-		/// <summary>
-		/// Deletes a user dynamically based on their role, handling relational tables first.
-		/// </summary>
 		public void DeleteUser(int id, string role)
 		{
 			string tableName, idColumn, relationTable, relationColumn;
@@ -576,9 +500,6 @@ namespace SchoolInformationManagement
 			}
 		}
 
-		/// <summary>
-		/// Executes an UPDATE statement for a given student based on their ID.
-		/// </summary>
 		public void UpdateStudent(Student student)
 		{
 			string query = "UPDATE Students SET Name = @Name, Phone = @Phone, Email = @Email WHERE StudentId = @Id";
@@ -608,18 +529,11 @@ namespace SchoolInformationManagement
 		public List<User> GetTeachingStaffs() => ExecuteUserQuery(_queryTeacher);
 		public List<User> GetAdministrators() => ExecuteUserQuery(_queryAdmin);
 
-		// Combines all 3 queries into a massive query using UNION ALL to fetch the entire organization
 		public List<User> GetAllUsers() => ExecuteUserQuery($"{_queryStudent} UNION ALL {_queryTeacher} UNION ALL {_queryAdmin}");
 
-		/// <summary>
-		/// General engine that runs a query and maps the SQL tabular data into Object-Oriented Models.
-		/// Handles One-to-Many relationships by grouping multiple rows into a single Object.
-		/// </summary>
+	
 		private List<User> ExecuteUserQuery(string query)
 		{
-			// Dictionary used to prevent duplicating users. 
-			// Example issue: If User A has 3 subjects, SQL returns 3 rows for User A. 
-			// We use the Dictionary to create User A once, and append the 3 subjects to their list.
 			var userDictionary = new Dictionary<string, User>();
 
 			using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -703,9 +617,6 @@ namespace SchoolInformationManagement
 	// properties and lightweight data-formatting methods, no complex logic or SQL references.
 	// =========================================================================================
 
-	/// <summary>
-	/// Base class representing an entity in the system. Cannot be instantiated directly.
-	/// </summary>
 	public abstract class User
 	{
 		public int Id { get; set; }
@@ -713,64 +624,41 @@ namespace SchoolInformationManagement
 		public string Phone { get; set; }
 		public string Email { get; set; }
 
-		// Virtual property allows derived classes to override this value
 		public virtual string Role => "User";
 
-		/// <summary>
-		/// Virtual method providing polymorphic formatting of basic user information.
-		/// </summary>
 		public virtual string getInfo()
 		{
 			return $"{Name} - {Phone} - {Email} ({Role})";
 		}
 	}
 
-	/// <summary>
-	/// Represents a class subject/course.
-	/// </summary>
 	public class Subject
 	{
 		public int SubjectId { get; set; }
 		public string SubjectName { get; set; }
 	}
 
-	/// <summary>
-	/// Student entity, inheriting basic properties from User.
-	/// </summary>
 	public class Student : User
 	{
 		public override string Role => "Student";
-
-		// Navigation Property: Represents the One-to-Many relationship (1 Student has Many Subjects)
 		public List<Subject> Subjects { get; set; } = new List<Subject>();
-
-		// LINQ Helper: Formats the List of subjects into a single comma-separated string for UI display
 		public string AssignedSubjects => string.Join(", ", Subjects.Select(s => s.SubjectName));
-
-		// Overrides the base getInfo to append Subject-specific information
 		public override string getInfo() => base.getInfo() + $" - Subjects: {AssignedSubjects}";
 	}
 
-	/// <summary>
-	/// TeachingStaff entity, inheriting from User and adding financial properties.
-	/// </summary>
 	public class TeachingStaff : User
 	{
 		public override string Role => "TeachingStaff";
 		public decimal Salary { get; set; }
 
-		// Teachers also have a One-to-Many relationship with Subjects
 		public List<Subject> Subjects { get; set; } = new List<Subject>();
 
 		public string AssignedSubjects => string.Join(", ", Subjects.Select(s => s.SubjectName));
 
-		// Note the :C format specifier used to format the decimal as Currency
 		public override string getInfo() => base.getInfo() + $" - Salary: {Salary:C} - Subjects: {AssignedSubjects}";
 	}
 
-	/// <summary>
-	/// Administrator entity. Admins don't teach subjects, but have Employment statuses.
-	/// </summary>
+
 	public class Administrator : User
 	{
 		public override string Role => "Administrator";
